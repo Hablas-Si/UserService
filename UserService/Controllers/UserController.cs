@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Models;
 using Repositories;
 using System.Text;
+using System.Security.Authentication.ExtendedProtection;
 
 namespace UserService.Controllers
 {
@@ -50,8 +51,8 @@ namespace UserService.Controllers
         {
             // henter først en user vha. FindUser metode udfra id bestemt i UpdateUser parametren.
             var existingUser = await _mongoDBRepository.FindUserAsync(id);
-
-            if (existingUser == null)
+            //Gør måske ikke rigtigt noget, da den allerede sender 400 bad request. fikser senere.
+            if (existingUser == null) 
             {
                 return NotFound();
             }
@@ -60,6 +61,7 @@ namespace UserService.Controllers
             existingUser.Username = login.Username;
             existingUser.Password = login.Password;
             existingUser.Role = login.Role;
+            existingUser.Email = login.Email;
 
             // Kalder metode til at opdatere brugeren i databasen
             await _mongoDBRepository.UpdateUserAsync(existingUser);

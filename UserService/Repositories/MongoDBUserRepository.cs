@@ -30,6 +30,7 @@ namespace Repositories
         public async Task AddUserAsync(UserModel login)
         {
             login.Role = "User";
+            login.registrationDate = DateTime.UtcNow.AddHours(2);
             await UserCollection.InsertOneAsync(login);
         }
 
@@ -46,7 +47,8 @@ namespace Repositories
             var update = Builders<UserModel>.Update
                .Set(x => x.Username, login.Username)
                .Set(x => x.Password, login.Password)
-               .Set(x => x.Role, login.Role);
+               .Set(x => x.Role, login.Role)
+               .Set(x => x.Email, login.Email);
 
             // erstatter den gamle med det nye man har valgt (username, password).
             await UserCollection.ReplaceOneAsync(filter, login);
