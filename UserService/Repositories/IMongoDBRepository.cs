@@ -7,7 +7,7 @@ namespace Repositories
 {
     public interface IMongoDBRepository
     {
-        Task<bool> CheckIfUserExists(string Username);
+        Task<bool> CheckIfUserExistsAsync(string Username);
         Task AddUserAsync(UserModel login);
         Task<UserModel> FindUserAsync(Guid id);
         Task UpdateUserAsync(UserModel login);
