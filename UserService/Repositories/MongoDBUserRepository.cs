@@ -60,5 +60,11 @@ namespace Repositories
             var UserDerSkalSlettes = UserCollection.Find(user => user.Id == id).FirstOrDefault().ToBsonDocument();
             await UserCollection.DeleteOneAsync(UserDerSkalSlettes);
         }
+
+        public async Task<bool>ValidateUserAsync (string Username, string Password, string Role) {
+
+            var user = await UserCollection.Find(new BsonDocument("Username", Username).Add("Password", Password).Add("Role", Role)).FirstOrDefaultAsync();
+            return user != null;
+        }
     }
 }

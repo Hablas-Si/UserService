@@ -4,6 +4,7 @@ using Models;
 using Repositories;
 using System.Text;
 using System.Security.Authentication.ExtendedProtection;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace UserService.Controllers
 {
@@ -44,6 +45,12 @@ namespace UserService.Controllers
                 return NotFound();
             }
             return Ok(user);
+        }
+
+        [HttpGet($"validateuser/{Username}/{Password}/{Role}")]
+        public async Task<IActionResult> ValidateUser(string username, string password, string role) 
+        {
+
         }
 
         [HttpPut("updateuser/{id}")]
