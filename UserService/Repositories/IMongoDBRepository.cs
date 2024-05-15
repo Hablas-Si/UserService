@@ -12,6 +12,6 @@ namespace Repositories
         Task<UserModel> FindUserAsync(Guid id);
         Task UpdateUserAsync(UserModel login);
         Task DeleteUserAsync(Guid id);
-        Task<bool>ValidateUserAsync (string Username, string Password, string Role);
+        Task<bool> CheckIfUserExistsWithPassword(string Username, string Password, string Role);
     }
 }

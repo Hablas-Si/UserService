@@ -47,19 +47,13 @@ namespace UserService.Controllers
             return Ok(user);
         }
 
-        [HttpGet($"validateuser/{Username}/{Password}/{Role}")]
-        public async Task<IActionResult> ValidateUser(string username, string password, string role) 
-        {
-
-        }
-
         [HttpPut("updateuser/{id}")]
         public async Task<IActionResult> UpdateUser(Guid id, UserModel login)
         {
             // henter først en user vha. FindUser metode udfra id bestemt i UpdateUser parametren.
             var existingUser = await _mongoDBRepository.FindUserAsync(id);
             //Gør måske ikke rigtigt noget, da den allerede sender 400 bad request. fikser senere.
-            if (existingUser == null) 
+            if (existingUser == null)
             {
                 return NotFound();
             }
@@ -94,6 +88,15 @@ namespace UserService.Controllers
             // statuskode 204
             return NoContent();
         }
+
+        [HttpPost("login/validate")]
+        public async Task<IActionResult> ValidateUser([FromBody] UserModel login)
+        {
+            // Implementer logik til at validere brugeroplysningerne mod databasen eller anden autentificeringsmekanisme
+            var isValidUser = await _mongoDBRepository.CheckIfUserExistsWithPassword(login.Username, login.Password, login.Role);
+            return Ok(isValidUser);
+        }
+
 
     }
 }
