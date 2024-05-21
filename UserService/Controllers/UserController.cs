@@ -26,7 +26,7 @@ namespace UserService.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserModel login)
         {
-            //Tjekkerr om brugeren allerede eksisterer
+            //TjekkerR om brugeren allerede eksisterer
             if (await _mongoDBRepository.CheckIfUserExistsAsync(login.Username) == true)
             {
                 return BadRequest("User already exists");
