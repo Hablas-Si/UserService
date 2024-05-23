@@ -13,7 +13,7 @@ namespace Repositories
         public MongoDBUserRepository(IOptions<MongoDBSettings> mongoDBSettings)
         {
             // trækker connection string og database navn og collectionname fra program.cs aka fra terminalen ved export. Dette er en constructor injection.
-            MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
+            MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionAuctionDB);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             UserCollection = database.GetCollection<UserModel>(mongoDBSettings.Value.CollectionName);
         }

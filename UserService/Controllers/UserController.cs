@@ -5,6 +5,7 @@ using Repositories;
 using System.Text;
 using System.Security.Authentication.ExtendedProtection;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
@@ -15,12 +16,16 @@ namespace UserService.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IMongoDBRepository _mongoDBRepository;
 
-        public UserController(ILogger<UserController> logger, IMongoDBRepository mongoDBRepository)
+        private readonly IVaultRepository _vaultService;
+
+
+        public UserController(ILogger<UserController> logger, IMongoDBRepository mongoDBRepository, IVaultRepository vaultService)
         {
             _logger = logger;
             _mongoDBRepository = mongoDBRepository;
-
+            _vaultService = vaultService;
         }
+
 
 
         [HttpPost("register")]
@@ -95,6 +100,41 @@ namespace UserService.Controllers
             // Implementer logik til at validere brugeroplysningerne mod databasen eller anden autentificeringsmekanisme
             var isValidUser = await _mongoDBRepository.CheckIfUserExistsWithPassword(login.Username, login.Password, login.Role);
             return Ok(isValidUser);
+        }
+
+        //TEST ENVIRONMENT
+        // OBS: TIlføj en Authorize attribute til metoderne nedenunder Kig ovenfor i jwt token creation.
+        [HttpGet("authorized"), Authorize(Roles = "Admin")]
+        public IActionResult Authorized()
+        {
+
+            // Hvis brugeren har en gyldig JWT-token og rollen "Admin", vil denne metode blive udført
+            return Ok("You are authorized to access this resource.");
+        }
+
+        // En get der henter secrets ned fra vault
+        [AllowAnonymous]
+        [HttpGet("getsecret/{path}")]
+        public async Task<IActionResult> GetSecret(string path)
+        {
+            try
+            {
+                _logger.LogInformation($"Getting secret with path {path}");
+                var secretValue = await _vaultService.GetSecretAsync(path);
+                if (secretValue != null)
+                {
+                    return Ok(secretValue);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving secret: {ex}");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving secret.");
+            }
         }
 
 
