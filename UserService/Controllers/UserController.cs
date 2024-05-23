@@ -27,7 +27,7 @@ namespace UserService.Controllers
         }
 
 
-
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserModel login)
         {
@@ -41,7 +41,7 @@ namespace UserService.Controllers
             return Ok("User created");
         }
 
-        [HttpGet("getuser/{id}")]
+        [HttpGet("getuser/{id}"), Authorize(Roles="Admin")]
         public async Task<IActionResult> GetUser(Guid id)
         {
             var user = await _mongoDBRepository.FindUserAsync(id);
@@ -52,7 +52,7 @@ namespace UserService.Controllers
             return Ok(user);
         }
 
-        [HttpPut("updateuser/{id}")]
+        [HttpPut("updateuser/{id}"), Authorize(Roles="Admin")]
         public async Task<IActionResult> UpdateUser(Guid id, UserModel login)
         {
             // henter først en user vha. FindUser metode udfra id bestemt i UpdateUser parametren.
@@ -76,7 +76,8 @@ namespace UserService.Controllers
             return NoContent();
         }
 
-        [HttpDelete("deleteuser/{id}")]
+
+        [HttpDelete("deleteuser/{id}"), Authorize(Roles="Admin")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             // henter først en vare vha. GetVare metode udfra id bestemt i UpdateVare parametren.
@@ -93,7 +94,7 @@ namespace UserService.Controllers
             // statuskode 204
             return NoContent();
         }
-
+        [AllowAnonymous]
         [HttpPost("login/validate")]
         public async Task<IActionResult> ValidateUser([FromBody] UserModel login)
         {
