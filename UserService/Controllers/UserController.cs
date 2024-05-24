@@ -41,7 +41,7 @@ namespace UserService.Controllers
             return Ok("User created");
         }
 
-        [HttpGet("getuser/{id}"), Authorize(Roles="Admin")]
+        [HttpGet("getuser/{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUser(Guid id)
         {
             var user = await _mongoDBRepository.FindUserAsync(id);
@@ -52,7 +52,7 @@ namespace UserService.Controllers
             return Ok(user);
         }
 
-        [HttpPut("updateuser/{id}"), Authorize(Roles="Admin")]
+        [HttpPut("updateuser/{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(Guid id, UserModel login)
         {
             // henter først en user vha. FindUser metode udfra id bestemt i UpdateUser parametren.
@@ -77,7 +77,7 @@ namespace UserService.Controllers
         }
 
 
-        [HttpDelete("deleteuser/{id}"), Authorize(Roles="Admin")]
+        [HttpDelete("deleteuser/{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             // henter først en vare vha. GetVare metode udfra id bestemt i UpdateVare parametren.
@@ -113,30 +113,6 @@ namespace UserService.Controllers
             return Ok("You are authorized to access this resource.");
         }
 
-        // En get der henter secrets ned fra vault
-        [AllowAnonymous]
-        [HttpGet("getsecret/{path}")]
-        public async Task<IActionResult> GetSecret(string path)
-        {
-            try
-            {
-                _logger.LogInformation($"Getting secret with path {path}");
-                var secretValue = await _vaultService.GetSecretAsync(path);
-                if (secretValue != null)
-                {
-                    return Ok(secretValue);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error retrieving secret: {ex}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving secret.");
-            }
-        }
 
 
     }
