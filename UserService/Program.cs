@@ -25,7 +25,7 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
 var vaultService = new VaultRepository(logger, builder.Configuration);
 var mySecret = await vaultService.GetSecretAsync("Secret");
 var myIssuer = await vaultService.GetSecretAsync("Issuer");
-// logger.Info($"Secret: {mySecret} and Issuer: {myIssuer}");
+logger.Info($"Secret: {mySecret} and Issuer: {myIssuer}");
 if (mySecret == null || myIssuer == null)
 {
     Console.WriteLine("Failed to retrieve secrets from Vault");
