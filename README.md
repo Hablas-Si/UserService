@@ -27,5 +27,5 @@ UserService er en mikrotjeneste designet til at håndtere brugeroplysninger og v
       ```sh
     docker compose up -d
     ```
-# Viderudvikling
+### Viderudvikling
 Hvert push til main fra UserService eller andre vilkårlige services, bygger et dockerfile og pusher den automatisk op til dockerhub, så du skal bare compose down og compose up igen. Dette sker igennem github actions.
